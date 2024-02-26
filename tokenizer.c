@@ -49,5 +49,76 @@ static char peek_next() {
 
 void skip_whitespace() {
   for (;;) {
+    char c = peek();
+    switch (c) {
+    case ' ':
+    case '\r':
+    case '\t':
+      advance();
+      break;
+    case '\n':
+      scanner.line++;
+      advance();
+      break;
+    case '/':
+      if (peek_next() == '/') {
+        while (peek() != '\n' && !is_at_end())
+          advance();
+      } else {
+        return;
+      }
+    default:
+      return;
+    }
+  }
+}
+
+TokenType identifier() {
+  while (is_alpha(peek()) || is_digit(peek()))
+    advance();
+  return IDENTIFIER;
+}
+
+TokenType number() {
+  while (is_digit(peek()))
+    advance();
+  if (peek() == '.' && is_digit(peek_next())) {
+    advance();
+    while (is_digit(peek_next()))
+      advance();
+  }
+  return INT_CONST;
+}
+
+TokenType string() {}
+
+Token make_token(Symbol type) {
+  Token token;
+  token.type = type;
+  token.start = scanner.start;
+  token.length = (int)(scanner.current - scanner.start);
+  token.line = scanner.line;
+  return token;
+}
+
+TokenType scan_token_types() {
+  skip_whitespace();
+  scanner.start = scanner.current;
+  if (is_at_end())
+    return _EOF;
+  char c;
+  advance();
+
+  if (is_alpha(c)) {
+    return identifier();
+  }
+  if (is_digit(c)) {
+    return number();
+  }
+  switch (c) {
+  case '"':
+    return string();
+  default:
+    return SYMBOL;
   }
 }

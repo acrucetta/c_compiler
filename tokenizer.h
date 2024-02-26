@@ -1,9 +1,10 @@
 typedef enum {
   KEYWORD,
   SYMBOL,
-  IDENTIFIER_INT,
+  IDENTIFIER,
   INT_CONST,
-  STRING_CONST
+  STRING_CONST,
+  _EOF
 } TokenType;
 
 typedef enum {
@@ -27,7 +28,8 @@ typedef enum {
   TOKEN_TRUE,
   TOKEN_FALSE,
   TOKEN_NULL,
-  TOKEN_THIS
+  TOKEN_THIS,
+  TOKEN_EOF
 } Symbol;
 
 typedef struct {
