@@ -42,16 +42,16 @@ void write_xml_file(const char *path, const char *xml) {
   fclose(file);
 }
 
-int main(int argc, char *argv[]) {
-  if (argc != 2) {
-    fprintf(stderr, "Usage: jack_analyzer <file.jack>\n");
-    exit(1);
-  }
+// int main(int argc, char *argv[]) {
+//   if (argc != 2) {
+//     fprintf(stderr, "Usage: jack_analyzer <file.jack>\n");
+//     exit(1);
+//   }
 
-  const char *input_path = argv[1];
-  char *source = read_file(input_path);
-  printf("Read file: %s\n", input_path);
+//   const char *input_path = argv[1];
+//   char *source = read_file(input_path);
+//   printf("Read file: %s\n", input_path);
 
-  // Print contents of file
-  printf("%s\n", source);
-}
+//   // Print contents of file
+//   printf("%s\n", source);
+// }

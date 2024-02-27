@@ -1,9 +1,8 @@
 // tests/test_tokenizer.c
+#include "../src/file_io.h"
 #include "../src/tokenizer.h"
 #include <assert.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 Scanner scanner;
 
@@ -46,11 +45,24 @@ void test_scan_declaration() {
   printf("\nScan declaration test passed.\n");
 }
 
+void test_open_file_and_tokenize() {
+  char *file = "tests/Prog.jack";
+  char *file_contents = read_file(file);
+  init_scanner(file_contents);
+  for (int i = 0; i < 100; i++) {
+    TokenType token = scan_token_type();
+    if (token == _EOF) {
+      break;
+    }
+    printf("Token: %d\n", token);
+  }
+}
+
 int main() {
   test_init_scanner();
-  test_scan_token();
-  test_scan_declaration();
-  // Add more test functions as needed
+  // test_scan_token();
+  // test_scan_declaration();
+  test_open_file_and_tokenize();
   printf("All tests passed.\n");
   return 0;
 }

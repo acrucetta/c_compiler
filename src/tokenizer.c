@@ -225,5 +225,3 @@ TokenType scan_token_type() {
     return SYMBOL;
   }
 }
-
-int main() {}
