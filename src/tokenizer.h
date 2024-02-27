@@ -1,3 +1,4 @@
+// tokenizer.h
 typedef enum {
   KEYWORD,
   SYMBOL,
@@ -29,8 +30,15 @@ typedef enum {
   TOKEN_FALSE,
   TOKEN_NULL,
   TOKEN_THIS,
-  TOKEN_EOF
+  TOKEN_EOF,
+  TOKEN_IDENTIFIER
 } Symbol;
+
+typedef struct {
+  const char *start;
+  const char *current;
+  int line;
+} Scanner;
 
 typedef struct {
   Symbol type;
@@ -41,3 +49,4 @@ typedef struct {
 
 void init_scanner(const char *source);
 Token scan_token();
+TokenType scan_token_type();
