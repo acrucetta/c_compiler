@@ -47,6 +47,13 @@ typedef struct {
   int line;
 } Token;
 
+typedef struct {
+  TokenType type;
+  const char *start;
+  int length;
+  int line;
+} TokenTypeInfo;
+
 void init_scanner(const char *source);
 Token scan_token();
 TokenType scan_token_type();

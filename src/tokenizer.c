@@ -68,6 +68,15 @@ void skip_whitespace() {
   }
 }
 
+TokenTypeInfo make_token_info(TokenType type, const char *start, int length) {
+  TokenTypeInfo info;
+  info.type = type;
+  info.start = start;
+  info.length = length;
+  info.line = scanner.line;
+  return info;
+}
+
 static Symbol check_keyword(int start, int length, const char *rest,
                             Symbol type) {
   if (scanner.current - scanner.start == start + length &&
