@@ -1,0 +1,5 @@
+// Coments and white space
+// are ignored
+if (x < 0) {
+    let quit = "yes";
+}
