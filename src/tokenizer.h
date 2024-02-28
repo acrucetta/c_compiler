@@ -1,14 +1,10 @@
 // tokenizer.h
-typedef enum {
-  KEYWORD,
-  SYMBOL,
-  IDENTIFIER,
-  INT_CONST,
-  STRING_CONST,
-  _EOF
-} TokenType;
 
 typedef enum {
+  TOKEN_ERROR,
+  TOKEN_SYMBOL,
+  TOKEN_NUMBER,
+  TOKEN_STRING,
   TOKEN_CLASS,
   TOKEN_METHOD,
   TOKEN_FUNCTION,
@@ -32,7 +28,7 @@ typedef enum {
   TOKEN_THIS,
   TOKEN_EOF,
   TOKEN_IDENTIFIER
-} Symbol;
+} TokenType;
 
 typedef struct {
   const char *start;
@@ -41,19 +37,11 @@ typedef struct {
 } Scanner;
 
 typedef struct {
-  Symbol type;
+  TokenType type;
   const char *start;
   int length;
   int line;
 } Token;
 
-typedef struct {
-  TokenType type;
-  const char *start;
-  int length;
-  int line;
-} TokenTypeInfo;
-
 void init_scanner(const char *source);
 Token scan_token();
-TokenType scan_token_type();

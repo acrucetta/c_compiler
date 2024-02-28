@@ -68,17 +68,8 @@ void skip_whitespace() {
   }
 }
 
-TokenTypeInfo make_token_info(TokenType type, const char *start, int length) {
-  TokenTypeInfo info;
-  info.type = type;
-  info.start = start;
-  info.length = length;
-  info.line = scanner.line;
-  return info;
-}
-
-static Symbol check_keyword(int start, int length, const char *rest,
-                            Symbol type) {
+static TokenType check_keyword(int start, int length, const char *rest,
+                               TokenType type) {
   if (scanner.current - scanner.start == start + length &&
       memcmp(scanner.start + start, rest, length) == 0) {
     return type;
@@ -86,7 +77,7 @@ static Symbol check_keyword(int start, int length, const char *rest,
   return TOKEN_IDENTIFIER;
 }
 
-static Symbol identifier_type() {
+static TokenType identifier_type() {
   for (int i = 0; i < scanner.current - scanner.start; i++) {
     printf("%c", scanner.start[i]);
   }
@@ -164,7 +155,7 @@ static Symbol identifier_type() {
   return TOKEN_IDENTIFIER;
 }
 
-Symbol identifier() {
+TokenType identifier() {
   while (is_alpha(peek()) || is_digit(peek()))
     advance();
 
@@ -179,7 +170,7 @@ TokenType number() {
     while (is_digit(peek_next()))
       advance();
   }
-  return INT_CONST;
+  return TOKEN_NUMBER;
 }
 
 TokenType string() {
@@ -194,10 +185,10 @@ TokenType string() {
     printf("Unterminated string.\n");
     exit(1);
   }
-  return STRING_CONST;
+  return TOKEN_STRING;
 }
 
-Token make_token(Symbol type) {
+Token make_token(TokenType type) {
   Token token;
   token.type = type;
   token.start = scanner.start;
@@ -206,31 +197,24 @@ Token make_token(Symbol type) {
   return token;
 }
 
-TokenType scan_token_type() {
+Token scan_token() {
   printf("\nScanning tokens \n");
   skip_whitespace();
   scanner.start = scanner.current;
   if (is_at_end())
-    return _EOF;
+    return make_token(TOKEN_EOF);
   char c = advance();
   if (is_alpha(c)) {
-    switch (identifier()) {
-    case TOKEN_IDENTIFIER:
-      return IDENTIFIER;
-    default:
-      return KEYWORD;
-    }
+    return make_token(identifier());
   }
   if (is_digit(c)) {
-    return number();
+    return make_token(number());
   }
   printf("\n Char: %c\n", c);
   switch (c) {
   case '"':
-    printf("Found string");
-    return string();
+    return make_token(string());
   default:
-    printf("Found symbol");
-    return SYMBOL;
+    return make_token(TOKEN_SYMBOL);
   }
 }
