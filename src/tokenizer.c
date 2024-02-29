@@ -68,8 +68,8 @@ void skip_whitespace() {
   }
 }
 
-static TokenType check_keyword(int start, int length, const char *rest,
-                               TokenType type) {
+enum TokenType check_keyword(int start, int length, const char *rest,
+                             enum TokenType type) {
   if (scanner.current - scanner.start == start + length &&
       memcmp(scanner.start + start, rest, length) == 0) {
     return type;
@@ -77,10 +77,7 @@ static TokenType check_keyword(int start, int length, const char *rest,
   return TOKEN_IDENTIFIER;
 }
 
-static TokenType identifier_type() {
-  for (int i = 0; i < scanner.current - scanner.start; i++) {
-    printf("%c", scanner.start[i]);
-  }
+enum TokenType identifier_type() {
   switch (scanner.start[0]) {
   case 'b':
     return check_keyword(1, 6, "oolean", TOKEN_BOOLEAN);
@@ -112,7 +109,7 @@ static TokenType identifier_type() {
     }
     break;
   case 'l':
-    return check_keyword(1, 2, "et", TOKEN_STATIC);
+    return check_keyword(1, 2, "et", TOKEN_LET);
   case 'm':
     return check_keyword(1, 5, "ethod", TOKEN_METHOD);
   case 'n':
@@ -155,14 +152,14 @@ static TokenType identifier_type() {
   return TOKEN_IDENTIFIER;
 }
 
-TokenType identifier() {
+enum TokenType identifier() {
   while (is_alpha(peek()) || is_digit(peek()))
     advance();
 
   return identifier_type();
 }
 
-TokenType number() {
+enum TokenType number() {
   while (is_digit(peek()))
     advance();
   if (peek() == '.' && is_digit(peek_next())) {
@@ -173,22 +170,21 @@ TokenType number() {
   return TOKEN_NUMBER;
 }
 
-TokenType string() {
-  if (peek() == '"') {
-    while (peek() != '"' && !is_at_end()) {
-      if (peek() == '\n')
-        scanner.line++;
-      advance();
-    }
+enum TokenType string() {
+  while (peek() != '"' && !is_at_end()) {
+    if (peek() == '\n')
+      scanner.line++;
+    advance();
   }
   if (is_at_end()) {
     printf("Unterminated string.\n");
     exit(1);
   }
+  advance();
   return TOKEN_STRING;
 }
 
-Token make_token(TokenType type) {
+Token make_token(enum TokenType type) {
   Token token;
   token.type = type;
   token.start = scanner.start;
@@ -198,7 +194,6 @@ Token make_token(TokenType type) {
 }
 
 Token scan_token() {
-  printf("\nScanning tokens \n");
   skip_whitespace();
   scanner.start = scanner.current;
   if (is_at_end())
@@ -210,11 +205,29 @@ Token scan_token() {
   if (is_digit(c)) {
     return make_token(number());
   }
-  printf("\n Char: %c\n", c);
   switch (c) {
   case '"':
     return make_token(string());
   default:
     return make_token(TOKEN_SYMBOL);
   }
+}
+
+Token *scan_tokens(const char *source) {
+  init_scanner(source);
+  int capacity = 8;
+  int count = 0;
+  Token *tokens = malloc(capacity * sizeof(Token));
+  for (;;) {
+    Token token = scan_token();
+    if (token.type == TOKEN_EOF)
+      break;
+    if (count == capacity) {
+      capacity *= 2;
+      tokens = realloc(tokens, capacity * sizeof(Token));
+    }
+    tokens[count++] = token;
+  }
+  tokens = realloc(tokens, count * sizeof(Token));
+  return tokens;
 }

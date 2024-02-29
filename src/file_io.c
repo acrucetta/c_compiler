@@ -1,4 +1,6 @@
 #include "file_io.h"
+#include "../src/tokenizer.h"
+#include <string.h>
 
 // Function to read .jack
 // files into a string
@@ -30,15 +32,23 @@ char *read_file(const char *path) {
   return buffer;
 }
 
-// Function to write a XML file
-void write_xml_file(const char *path, const char *xml) {
+void write_xml_from_tokens(const char *path, Token *tokens) {
   FILE *file = fopen(path, "w");
   if (file == NULL) {
     fprintf(stderr, "Could not open file: %s\n", path);
     exit(1);
   }
 
-  fprintf(file, "%s", xml);
+  fprintf(file, "<tokens>\n");
+  for (int i = 0; i < 100; i++) {
+    Token token = tokens[i];
+    if (token.type == TOKEN_EOF) {
+      break;
+    }
+    fprintf(file, "<%s> %s </%s>\n", token_string[token.type], token_value,
+            token_string[token.type]);
+  }
+  fprintf(file, "</tokens>\n");
   fclose(file);
 }
 

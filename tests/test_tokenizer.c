@@ -42,6 +42,10 @@ void test_scan_declaration() {
   assert(token4.type == TOKEN_STRING);
   Token token5 = scan_token();
   assert(token5.type == TOKEN_SYMBOL);
+
+  // Print a sample token
+  printf("Token: %s\n", token2.start);
+
   printf("\nScan declaration test passed.\n");
 }
 
@@ -54,15 +58,24 @@ void test_open_file_and_tokenize() {
     if (token.type == TOKEN_EOF) {
       break;
     }
-    printf("Token: %d\n", token);
+    printf("Token: %d\n", token.type);
   }
 }
+
+void test_write_xml_file() {
+  char *out_file = "test.xml";
+  char *in_file = "tests/Prog.jack";
+  char *file_contents = read_file(in_file);
+  Token *tokens = scan_tokens(file_contents);
+  write_xml_from_tokens(out_file, tokens);
+};
 
 int main() {
   test_init_scanner();
   // test_scan_token();
   // test_scan_declaration();
-  test_open_file_and_tokenize();
+  // test_open_file_and_tokenize();
+  test_write_xml_file();
   printf("All tests passed.\n");
   return 0;
 }

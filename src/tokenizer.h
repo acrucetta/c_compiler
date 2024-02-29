@@ -1,34 +1,40 @@
-// tokenizer.h
+#ifndef TOKENIZER_H
+#define TOKENIZER_H
 
-typedef enum {
-  TOKEN_ERROR,
-  TOKEN_SYMBOL,
-  TOKEN_NUMBER,
-  TOKEN_STRING,
-  TOKEN_CLASS,
-  TOKEN_METHOD,
-  TOKEN_FUNCTION,
-  TOKEN_CONSTRUCTOR,
-  TOKEN_INT,
-  TOKEN_BOOLEAN,
-  TOKEN_CHAR,
-  TOKEN_VOID,
-  TOKEN_VAR,
-  TOKEN_STATIC,
-  TOKEN_FIELD,
-  TOKEN_LET,
-  TOKEN_DO,
-  TOKEN_IF,
-  TOKEN_ELSE,
-  TOKEN_WHILE,
-  TOKEN_RETURN,
-  TOKEN_TRUE,
-  TOKEN_FALSE,
-  TOKEN_NULL,
-  TOKEN_THIS,
-  TOKEN_EOF,
-  TOKEN_IDENTIFIER
-} TokenType;
+#define FOREACH_TOKEN(TOKEN)                                                   \
+  TOKEN(TOKEN_ERROR)                                                           \
+  TOKEN(TOKEN_SYMBOL)                                                          \
+  TOKEN(TOKEN_NUMBER)                                                          \
+  TOKEN(TOKEN_STRING)                                                          \
+  TOKEN(TOKEN_CLASS)                                                           \
+  TOKEN(TOKEN_METHOD)                                                          \
+  TOKEN(TOKEN_FUNCTION)                                                        \
+  TOKEN(TOKEN_CONSTRUCTOR)                                                     \
+  TOKEN(TOKEN_INT)                                                             \
+  TOKEN(TOKEN_BOOLEAN)                                                         \
+  TOKEN(TOKEN_CHAR)                                                            \
+  TOKEN(TOKEN_VOID)                                                            \
+  TOKEN(TOKEN_VAR)                                                             \
+  TOKEN(TOKEN_STATIC)                                                          \
+  TOKEN(TOKEN_FIELD)                                                           \
+  TOKEN(TOKEN_LET)                                                             \
+  TOKEN(TOKEN_DO)                                                              \
+  TOKEN(TOKEN_IF)                                                              \
+  TOKEN(TOKEN_ELSE)                                                            \
+  TOKEN(TOKEN_WHILE)                                                           \
+  TOKEN(TOKEN_RETURN)                                                          \
+  TOKEN(TOKEN_TRUE)                                                            \
+  TOKEN(TOKEN_FALSE)                                                           \
+  TOKEN(TOKEN_NULL)                                                            \
+  TOKEN(TOKEN_THIS)                                                            \
+  TOKEN(TOKEN_EOF)                                                             \
+  TOKEN(TOKEN_IDENTIFIER)
+
+#define GENERATE_ENUM(ENUM) ENUM,
+#define GENERATE_STRING(STRING) #STRING,
+
+enum TokenType { FOREACH_TOKEN(GENERATE_ENUM) };
+static const char *token_string[] = {FOREACH_TOKEN(GENERATE_STRING)};
 
 typedef struct {
   const char *start;
@@ -37,7 +43,7 @@ typedef struct {
 } Scanner;
 
 typedef struct {
-  TokenType type;
+  enum TokenType type;
   const char *start;
   int length;
   int line;
@@ -45,3 +51,6 @@ typedef struct {
 
 void init_scanner(const char *source);
 Token scan_token();
+Token *scan_tokens(const char *source);
+
+#endif
