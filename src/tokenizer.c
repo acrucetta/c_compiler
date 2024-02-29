@@ -1,12 +1,3 @@
-/*
-Tokenizer High Level:
-- Split each line into blank spaces
-- Parse each set of chars and determine
-what type of symbol they are
-- Append the symbols to some kind of array
-of enums or types
-*/
-
 #include "tokenizer.h"
 #include <stdbool.h>
 #include <stdio.h>

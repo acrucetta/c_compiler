@@ -1,5 +1,6 @@
 #include "file_io.h"
 #include "../src/tokenizer.h"
+#include "../src/utils.h"
 #include <string.h>
 
 // Function to read .jack
@@ -42,10 +43,11 @@ void write_xml_from_tokens(const char *path, Token *tokens) {
   fprintf(file, "<tokens>\n");
   for (int i = 0; i < 100; i++) {
     Token token = tokens[i];
-    if (token.type == TOKEN_EOF) {
+    if (token.type == TOKEN_EOF || token.type == TOKEN_ERROR) {
       break;
     }
-    fprintf(file, "<%s> %s </%s>\n", token_string[token.type], token_value,
+    char *substring = get_substring(token.start, 0, token.length);
+    fprintf(file, "<%s> %s </%s>\n", token_string[token.type], substring,
             token_string[token.type]);
   }
   fprintf(file, "</tokens>\n");

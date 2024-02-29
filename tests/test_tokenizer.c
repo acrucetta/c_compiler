@@ -27,6 +27,12 @@ void test_scan_token() {
   assert(token3.type == TOKEN_IDENTIFIER);
   Token token4 = scan_token();
   assert(token4.type == TOKEN_SYMBOL);
+
+  printf("Type %i\n", token.type);
+  printf("Length %i\n", token.length);
+  printf("Start %s\n", token.start);
+  printf("String: %s\n", token_string[token.type]);
+
   printf("\nScan token test passed.\n");
 }
 
