@@ -46,8 +46,7 @@ void write_xml_from_tokens(const char *path, Token *tokens) {
     if (token.type == TOKEN_EOF || token.type == TOKEN_ERROR) {
       break;
     }
-    char *substring = get_substring(token.start, 0, token.length);
-    fprintf(file, "<%s> %s </%s>\n", token_string[token.type], substring,
+    fprintf(file, "<%s> %s </%s>\n", token_string[token.type], token.string,
             token_string[token.type]);
   }
   fprintf(file, "</tokens>\n");

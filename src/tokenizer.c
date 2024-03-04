@@ -1,4 +1,5 @@
 #include "tokenizer.h"
+#include "../src/utils.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -181,6 +182,7 @@ Token make_token(enum TokenType type) {
   token.start = scanner.start;
   token.length = (int)(scanner.current - scanner.start);
   token.line = scanner.line;
+  token.string = get_substring(token.start, 0, token.length);
   return token;
 }
 
