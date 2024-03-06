@@ -1,6 +1,7 @@
 #ifndef TOKENIZER_H
 #define TOKENIZER_H
 
+#include "symbol_table.h"
 #define FOREACH_TOKEN(TOKEN)                                                   \
   TOKEN(TOKEN_ERROR)                                                           \
   TOKEN(TOKEN_SYMBOL)                                                          \
@@ -45,13 +46,13 @@ typedef struct {
 typedef struct {
   enum TokenType type;
   const char *start;
-  const char *string;
+  const char *name;
   int length;
   int line;
 } Token;
 
 void init_scanner(const char *source);
-Token scan_token();
-Token *scan_tokens(const char *source);
+Token scan_token(SymbolTable *table);
+Token *scan_tokens(const char *source, SymbolTableStack *stack);
 
 #endif

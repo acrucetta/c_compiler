@@ -70,7 +70,7 @@ void test_open_file_and_tokenize() {
 
 void test_write_xml_file() {
   char *out_file = "test.xml";
-  char *in_file = "tests/Prog.jack";
+  char *in_file = "tests/Main.jack";
   char *file_contents = read_file(in_file);
   Token *tokens = scan_tokens(file_contents);
   write_xml_from_tokens(out_file, tokens);

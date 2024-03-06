@@ -69,7 +69,7 @@ enum TokenType check_keyword(int start, int length, const char *rest,
   return TOKEN_IDENTIFIER;
 }
 
-enum TokenType identifier_type() {
+enum TokenType identifier_type(SymbolTable *table) {
   switch (scanner.start[0]) {
   case 'b':
     return check_keyword(1, 6, "oolean", TOKEN_BOOLEAN);
@@ -141,14 +141,23 @@ enum TokenType identifier_type() {
   case 'w':
     return check_keyword(1, 4, "hile", TOKEN_WHILE);
   }
+
+  // Check if the identifier is already in the symbol table
+  char *identifier_name =
+      get_substring(scanner.start, 0, scanner.current - scanner.start);
+  Symbol *symbol = find_symbol(table, identifier_name);
+  if (symbol != NULL) {
+    return TOKEN_IDENTIFIER;
+  }
+
   return TOKEN_IDENTIFIER;
 }
 
-enum TokenType identifier() {
+enum TokenType identifier(SymbolTable *table) {
   while (is_alpha(peek()) || is_digit(peek()))
     advance();
 
-  return identifier_type();
+  return identifier_type(table);
 }
 
 enum TokenType number() {
@@ -182,18 +191,18 @@ Token make_token(enum TokenType type) {
   token.start = scanner.start;
   token.length = (int)(scanner.current - scanner.start);
   token.line = scanner.line;
-  token.string = get_substring(token.start, 0, token.length);
+  token.name = get_substring(token.start, 0, token.length);
   return token;
 }
 
-Token scan_token() {
+Token scan_token(SymbolTable *table) {
   skip_whitespace();
   scanner.start = scanner.current;
   if (is_at_end())
     return make_token(TOKEN_EOF);
   char c = advance();
   if (is_alpha(c)) {
-    return make_token(identifier());
+    return make_token(identifier(table));
   }
   if (is_digit(c)) {
     return make_token(number());
@@ -206,13 +215,14 @@ Token scan_token() {
   }
 }
 
-Token *scan_tokens(const char *source) {
+Token *scan_tokens(const char *source, SymbolTableStack *stack) {
   init_scanner(source);
   int capacity = 8;
   int count = 0;
   Token *tokens = malloc(capacity * sizeof(Token));
   for (;;) {
-    Token token = scan_token();
+    SymbolTable current_table = stack->tables[stack->top];
+    Token token = scan_token(&current_table);
     if (token.type == TOKEN_EOF)
       break;
     if (count == capacity) {
