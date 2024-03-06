@@ -3,11 +3,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct {
-  Token current;
-  Token previous;
-  bool hadError;
-  bool panicMode;
-} Parser;
-
-Parser parser;
+void init_compilation_engine();
+void compile_class();
+void compile_class_var_dec();
+void compile_subroutine();
+void compile_parameter_list();
+void compile_var_dec();
+void compile_statements();
+void compile_do();
+void compile_let();
+void compile_while();
+void compile_return();
+void compile_if();
+void compile_expression();
+void compile_term();
+void compile_expression_list();
