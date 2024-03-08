@@ -43,6 +43,8 @@ typedef struct {
   int line;
 } Scanner;
 
+extern Scanner scanner;
+
 typedef struct {
   enum TokenType type;
   const char *start;
@@ -52,7 +54,7 @@ typedef struct {
 } Token;
 
 void init_scanner(const char *source);
-Token scan_token(SymbolTable *table);
-Token *scan_tokens(const char *source, SymbolTableStack *stack);
+Token scan_token();
+Token *scan_tokens(const char *source);
 
 #endif

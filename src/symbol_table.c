@@ -59,6 +59,8 @@ void add_symbol(SymbolTable *table, char *name, char *type, Kind kind) {
   case ARG:
     symbol->index = table->arg_idx++;
     break;
+  default:
+    break;
   }
 }
 

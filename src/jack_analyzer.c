@@ -1,21 +1,17 @@
+#include "../src/compilation_engine.h"
 #include "../src/file_io.h"
-#include "../src/symbol_table.h"
 #include "../src/tokenizer.h"
 #include <assert.h>
 #include <stdio.h>
 
-int main() {
-  char *out_file = "test.xml";
-  char *in_file = "tests/Prog.jack";
-  char *file_contents = read_file(in_file);
+int main(int argc, char *argv[]) {
+  if (argc != 2) {
+    printf("Usage: jack_analyzer <file.jack>\n");
+    return 1;
+  }
 
-  SymbolTableStack stack;
-  init_symbol_table_stack(&stack);
+  char *in_file = argv[1];
+  char *out_file = "out.xml";
 
-  SymbolTable global_table;
-  init_symbol_table(&global_table);
-  push_symbol_table(&stack, global_table);
-
-  Token *tokens = scan_tokens(file_contents, &stack);
-  write_xml_from_tokens(out_file, tokens);
+  init_compilation_engine(in_file, out_file);
 }

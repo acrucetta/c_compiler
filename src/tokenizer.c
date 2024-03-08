@@ -54,6 +54,7 @@ void skip_whitespace() {
       } else {
         return;
       }
+      break;
     default:
       return;
     }
@@ -69,7 +70,7 @@ enum TokenType check_keyword(int start, int length, const char *rest,
   return TOKEN_IDENTIFIER;
 }
 
-enum TokenType identifier_type(SymbolTable *table) {
+enum TokenType identifier_type() {
   switch (scanner.start[0]) {
   case 'b':
     return check_keyword(1, 6, "oolean", TOKEN_BOOLEAN);
@@ -84,6 +85,7 @@ enum TokenType identifier_type(SymbolTable *table) {
         return check_keyword(2, 9, "nstructor", TOKEN_CONSTRUCTOR);
       }
     }
+    break;
   case 'd':
     return check_keyword(1, 1, "o", TOKEN_DO);
   case 'e':
@@ -117,6 +119,7 @@ enum TokenType identifier_type(SymbolTable *table) {
         return check_keyword(2, 1, "t", TOKEN_INT);
       }
     }
+    break;
   case 'r':
     return check_keyword(1, 5, "eturn", TOKEN_RETURN);
   case 't':
@@ -138,26 +141,18 @@ enum TokenType identifier_type(SymbolTable *table) {
         return check_keyword(2, 2, "id", TOKEN_VOID);
       }
     }
+    break;
   case 'w':
     return check_keyword(1, 4, "hile", TOKEN_WHILE);
   }
-
-  // Check if the identifier is already in the symbol table
-  char *identifier_name =
-      get_substring(scanner.start, 0, scanner.current - scanner.start);
-  Symbol *symbol = find_symbol(table, identifier_name);
-  if (symbol != NULL) {
-    return TOKEN_IDENTIFIER;
-  }
-
   return TOKEN_IDENTIFIER;
 }
 
-enum TokenType identifier(SymbolTable *table) {
+enum TokenType identifier() {
   while (is_alpha(peek()) || is_digit(peek()))
     advance();
 
-  return identifier_type(table);
+  return identifier_type();
 }
 
 enum TokenType number() {
@@ -195,14 +190,14 @@ Token make_token(enum TokenType type) {
   return token;
 }
 
-Token scan_token(SymbolTable *table) {
+Token scan_token() {
   skip_whitespace();
   scanner.start = scanner.current;
   if (is_at_end())
     return make_token(TOKEN_EOF);
   char c = advance();
   if (is_alpha(c)) {
-    return make_token(identifier(table));
+    return make_token(identifier());
   }
   if (is_digit(c)) {
     return make_token(number());
@@ -215,16 +210,18 @@ Token scan_token(SymbolTable *table) {
   }
 }
 
-Token *scan_tokens(const char *source, SymbolTableStack *stack) {
+Token *scan_tokens(const char *source) {
   init_scanner(source);
   int capacity = 8;
   int count = 0;
   Token *tokens = malloc(capacity * sizeof(Token));
   for (;;) {
-    SymbolTable current_table = stack->tables[stack->top];
-    Token token = scan_token(&current_table);
-    if (token.type == TOKEN_EOF)
+    printf("Scanner Current %s", scanner.current);
+    Token token = scan_token();
+    if (token.type == TOKEN_EOF) {
+      printf("EOF");
       break;
+    }
     if (count == capacity) {
       capacity *= 2;
       tokens = realloc(tokens, capacity * sizeof(Token));

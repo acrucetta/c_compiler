@@ -1,4 +1,5 @@
 // tests/test_tokenizer.c
+#include "../src/compilation_engine.h"
 #include "../src/file_io.h"
 #include "../src/tokenizer.h"
 #include <assert.h>
@@ -76,12 +77,24 @@ void test_write_xml_file() {
   write_xml_from_tokens(out_file, tokens);
 };
 
+void test_compilation_engine() {
+  char *in_file = "tests/Main.jack";
+  char *out_file = "out.xml";
+  int result = init_compilation_engine(in_file, out_file);
+  if (result == 0) {
+    printf("Compilation engine test passed.\n");
+  } else {
+    printf("Compilation engine test failed.\n");
+  }
+}
+
 int main() {
   test_init_scanner();
   // test_scan_token();
   // test_scan_declaration();
   // test_open_file_and_tokenize();
   test_write_xml_file();
+  // test_compilation_engine();
   printf("All tests passed.\n");
   return 0;
 }
