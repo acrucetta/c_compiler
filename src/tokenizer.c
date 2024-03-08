@@ -80,7 +80,7 @@ enum TokenType identifier_type() {
       case 'h':
         return check_keyword(2, 2, "ar", TOKEN_CHAR);
       case 'l':
-        return check_keyword(2, 4, "lass", TOKEN_CLASS);
+        return check_keyword(2, 3, "ass", TOKEN_CLASS);
       case 'o':
         return check_keyword(2, 9, "nstructor", TOKEN_CONSTRUCTOR);
       }
@@ -216,7 +216,6 @@ Token *scan_tokens(const char *source) {
   int count = 0;
   Token *tokens = malloc(capacity * sizeof(Token));
   for (;;) {
-    printf("Scanner Current %s", scanner.current);
     Token token = scan_token();
     if (token.type == TOKEN_EOF) {
       printf("EOF");

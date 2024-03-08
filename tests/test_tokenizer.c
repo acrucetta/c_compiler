@@ -93,8 +93,8 @@ int main() {
   // test_scan_token();
   // test_scan_declaration();
   // test_open_file_and_tokenize();
-  test_write_xml_file();
-  // test_compilation_engine();
+  // test_write_xml_file();
+  test_compilation_engine();
   printf("All tests passed.\n");
   return 0;
 }
