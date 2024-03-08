@@ -12,6 +12,7 @@ typedef struct {
 
 int compile_class(CompilationEngine *engine);
 int compile_class_var_dec(CompilationEngine *engine);
+int compile_subroutine(CompilationEngine *engine);
 char *get_indentation(int indentation);
 void _write_token(CompilationEngine *engine);
 
@@ -72,14 +73,13 @@ int compile_class(CompilationEngine *engine) {
          engine->token.type == TOKEN_FIELD) {
     compile_class_var_dec(engine);
   }
-  // while (engine->token.type == TOKEN_CONSTRUCTOR ||
-  //        engine->token.type == TOKEN_FUNCTION ||
-  //        engine->token.type == TOKEN_METHOD) {
-  //   printf("subroutineDec\n");
-  //   // compile_subroutine();
-  // }
-  // _write_token(engine);
-  // fprintf(engine->out_file, "</class>\n");
+  while (engine->token.type == TOKEN_CONSTRUCTOR ||
+         engine->token.type == TOKEN_FUNCTION ||
+         engine->token.type == TOKEN_METHOD) {
+    compile_subroutine(engine);
+  }
+  _write_token(engine);
+  fprintf(engine->out_file, "</class>\n");
   return EXIT_SUCCESS;
 }
 
@@ -96,8 +96,24 @@ int compile_class_var_dec(CompilationEngine *engine) {
   fprintf(engine->out_file, "</classVarDec>\n");
 }
 
-int compile_subroutine();
-int compile_parameter_list();
+int compile_subroutine(CompilationEngine *engine) {
+  char *ind1 = get_indentation(engine->indentation);
+  fprintf(engine->out_file, &ind1);
+  fprintf(engine->out_file, "<subroutineDec>\n");
+  engine->indentation += 1;
+  _write_token(engine); // Writing Keyword
+
+  engine->token = scan_token();
+  _write_token(engine); // Writing Identifier
+
+  engine->token = scan_token();
+  _write_token(engine); // Writing Symbol
+
+  engine->token = scan_token();
+  compile_parameter_list(engine);
+}
+
+int compile_parameter_list(CompilationEngine *engine);
 int compile_var_dec();
 int compile_statements();
 int compile_do();
