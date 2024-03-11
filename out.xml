@@ -1,0 +1,13 @@
+<class>
+ <TOKEN_CLASS> class </TOKEN_CLASS>
+ <TOKEN_IDENTIFIER> Main </TOKEN_IDENTIFIER>
+ <TOKEN_SYMBOL> { </TOKEN_SYMBOL>
+<subroutineDec>
+  <TOKEN_FUNCTION> function </TOKEN_FUNCTION>
+  <TOKEN_VOID> void </TOKEN_VOID>
+  <TOKEN_IDENTIFIER> main </TOKEN_IDENTIFIER>
+pCO<parameterList>
+   <TOKEN_SYMBOL> ( </TOKEN_SYMBOL>
+êCO</parameterList>
+  <TOKEN_SYMBOL> ) </TOKEN_SYMBOL>
+</class>

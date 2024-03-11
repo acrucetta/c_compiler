@@ -113,16 +113,46 @@ int compile_subroutine(CompilationEngine *engine) {
   fprintf(engine->out_file, &ind1);
   fprintf(engine->out_file, "<subroutineDec>\n");
   engine->indentation += 1;
-  _write_token(engine); // Writing Keyword
+  _write_token(engine); // Writing Keyword (constructor, function, method)
 
   engine->token = scan_token();
-  _write_token(engine); // Writing Identifier
+  _write_token(engine); // Writing Identifier (void, type)
 
   engine->token = scan_token();
-  _write_token(engine); // Writing Symbol
+  _write_token(engine); // Writing Identifier (subroutineName)
 
-  engine->token = scan_token(); // Writing Keyword
+  engine->token = scan_token(); // Getting Symbol (
+  _write_token(engine);          // Writing Symbol (
   compile_parameter_list(engine);
+  engine->token = scan_token(); // Getting Symbol )
+  _write_token(engine);          // Writing Symbol )
+
+  engine->token = scan_token(); // Getting Symbol {
+  _write_token(engine);          // Writing Symbol {
+  char *ind2 = get_indentation(engine->indentation);
+  fprintf(engine->out_file, &ind2);
+  fprintf(engine->out_file, "<subroutineBody>\n");
+  engine->indentation += 1;
+  
+  engine->token = scan_token();
+  while (engine->token.type == TOKEN_VAR) {
+    compile_var_dec(engine);
+  }
+
+  compile_statements(engine);
+
+  _write_token(engine); // Writing Symbol }
+  engine->indentation -= 1;
+  char *ind3 = get_indentation(engine->indentation);
+  fprintf(engine->out_file, &ind3);
+  fprintf(engine->out_file, "</subroutineBody>\n");
+  engine->indentation -= 1;
+  char *ind4 = get_indentation(engine->indentation);
+  fprintf(engine->out_file, &ind4);
+  fprintf(engine->out_file, "</subroutineDec>\n");
+  _write_token(engine); // Writing Symbol }
+
+  return EXIT_SUCCESS;
 }
 
 int compile_parameter_list(CompilationEngine *engine) {
@@ -130,6 +160,8 @@ int compile_parameter_list(CompilationEngine *engine) {
   fprintf(engine->out_file, &ind1);
   fprintf(engine->out_file, "<parameterList>\n");
   engine->indentation += 1;
+
+  engine->token = scan_token(); // Getting Keyword or Identifier
 
   while (engine->token.type != TOKEN_SYMBOL) {
     _write_token(engine); // Writing Keyword or Identifier
@@ -146,7 +178,18 @@ int compile_parameter_list(CompilationEngine *engine) {
   fprintf(engine->out_file, &ind2);
   fprintf(engine->out_file, "</parameterList>\n");
 }
-int compile_var_dec();
+
+int compile_var_dec(CompilationEngine *engine) {
+  char *ind1 = get_indentation(engine->indentation);
+  fprintf(engine->out_file, &ind1);
+  fprintf(engine->out_file, "<varDec>\n");
+  engine->indentation += 1; 
+
+  _write_token(engine); // Writing Keyword var
+  engine->token = scan_token();
+  
+
+}
 int compile_statements();
 int compile_do();
 int compile_let();
@@ -168,7 +211,7 @@ char *get_indentation(int indentation) {
 
 void _write_token(CompilationEngine *engine) {
   for (int i = 0; i < engine->indentation; i++) {
-    fprintf(engine->out_file, ' ');
+    fprintf(engine->out_file, " ");
   }
   fprintf(engine->out_file, "<%s> %s </%s>\n", token_string[engine->token.type],
           engine->token.name, token_string[engine->token.type]);
