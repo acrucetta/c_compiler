@@ -14,6 +14,17 @@ int compile_class(CompilationEngine *engine);
 int compile_class_var_dec(CompilationEngine *engine);
 int compile_subroutine(CompilationEngine *engine);
 int compile_parameter_list(CompilationEngine *engine);
+int compile_var_dec(CompilationEngine *engine);
+int compile_statements(CompilationEngine *engine);
+int compile_do(CompilationEngine *engine);
+int compile_let(CompilationEngine *engine);
+int compile_while(CompilationEngine *engine);
+int compile_return(CompilationEngine *engine);
+int compile_if(CompilationEngine *engine);
+int compile_expression(CompilationEngine *engine);
+int compile_term(CompilationEngine *engine);
+int compile_expression_list(CompilationEngine *engine);
+
 char *get_indentation(int indentation);
 void _write_token(CompilationEngine *engine);
 

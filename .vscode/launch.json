@@ -15,8 +15,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/andrescru/Library/CloudStorage/OneDrive-WaltzHealth/Documents/Github/c_compiler/src",
-      "program": "/Users/andrescru/Library/CloudStorage/OneDrive-WaltzHealth/Documents/Github/c_compiler/src/build/Debug/outDebug"
+      "cwd": "/Users/andrescru/Library/CloudStorage/OneDrive-WaltzHealth/Documents/Github/c_compiler/tests",
+      "program": "/Users/andrescru/Library/CloudStorage/OneDrive-WaltzHealth/Documents/Github/c_compiler/tests/build/Debug/outDebug"
     }
   ]
 }
