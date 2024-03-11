@@ -13,6 +13,7 @@ typedef struct {
 int compile_class(CompilationEngine *engine);
 int compile_class_var_dec(CompilationEngine *engine);
 int compile_subroutine(CompilationEngine *engine);
+int compile_parameter_list(CompilationEngine *engine);
 char *get_indentation(int indentation);
 void _write_token(CompilationEngine *engine);
 
@@ -109,11 +110,31 @@ int compile_subroutine(CompilationEngine *engine) {
   engine->token = scan_token();
   _write_token(engine); // Writing Symbol
 
-  engine->token = scan_token();
+  engine->token = scan_token(); // Writing Keyword
   compile_parameter_list(engine);
 }
 
-int compile_parameter_list(CompilationEngine *engine);
+int compile_parameter_list(CompilationEngine *engine) {
+  char *ind1 = get_indentation(engine->indentation);
+  fprintf(engine->out_file, &ind1);
+  fprintf(engine->out_file, "<parameterList>\n");
+  engine->indentation += 1;
+
+  while (engine->token.type != TOKEN_SYMBOL) {
+    _write_token(engine); // Writing Keyword or Identifier
+    engine->token = scan_token();
+    _write_token(engine); // Writing Identifier
+    engine->token = scan_token();
+    if (engine->token.type == TOKEN_SYMBOL && engine->token.name[0] == ',') {
+      _write_token(engine); // Writing Symbol
+      engine->token = scan_token();
+    }
+  }
+  engine->indentation -= 1;
+  char *ind2 = get_indentation(engine->indentation);
+  fprintf(engine->out_file, &ind2);
+  fprintf(engine->out_file, "</parameterList>\n");
+}
 int compile_var_dec();
 int compile_statements();
 int compile_do();
@@ -136,7 +157,7 @@ char *get_indentation(int indentation) {
 
 void _write_token(CompilationEngine *engine) {
   for (int i = 0; i < engine->indentation; i++) {
-    fprintf(engine->out_file, "  ");
+    fprintf(engine->out_file, ' ');
   }
   fprintf(engine->out_file, "<%s> %s </%s>\n", token_string[engine->token.type],
           engine->token.name, token_string[engine->token.type]);

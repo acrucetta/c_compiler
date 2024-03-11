@@ -2,6 +2,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug test_tokenizer",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/test_output",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "build_test_tokenizer"
+    },
+    {
       "name": "C/C++ Runner: Debug Session",
       "type": "lldb",
       "request": "launch",

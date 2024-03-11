@@ -1,0 +1,30 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "build_test_tokenizer",
+        "type": "shell",
+        "command": "gcc",
+        "args": [
+          "-g",
+          "-o",
+          "test_output",
+          "tests/test_tokenizer.c",
+          "src/tokenizer.c",
+          "src/file_io.c",
+          "src/utils.c",
+          "src/compilation_engine.c",
+          "src/symbol_table.c",
+          "-Isrc"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": ["$gcc"],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      }
+    ]
+  }
